@@ -6,13 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.Duration;
 
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import io.appium.java_client.AppiumBy;
@@ -20,7 +18,7 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
-public class Activity4 {
+public class Activity3 {
 	
 	AppiumDriver driver;
 	WebDriverWait wait;
@@ -31,8 +29,8 @@ public class Activity4 {
 		UiAutomator2Options options = new UiAutomator2Options()
 				.setAutomationName("UiAutomator2")
 				.setPlatformName("android")
-				.setAppPackage("com.google.android.contacts")//to set a package, its always goes with setAppActivity()
-				.setAppActivity("com.android.contacts.activities.PeopleActivity")
+				.setAppPackage("com.vivo.calculator")//to set a package, its always goes with setAppActivity()
+				.setAppActivity(".Calculator")
 				.noReset();
 		
 		URL serverURL = new URI("http://127.0.0.1:4723").toURL();
@@ -40,36 +38,91 @@ public class Activity4 {
 		//Initialize driver
 		driver = new AndroidDriver(serverURL, options);
 		
-		wait = new WebDriverWait(driver,Duration.ofSeconds(10));
-				
 	}
 	
-	@Test
-	public void createContact() {
+	@BeforeMethod
+	public void clearInput() {
+		//clears by clicking on AC on app
+		driver.findElement(AppiumBy.accessibilityId("Clear")).click();
+	}
+	
+	@Test(priority = 1)
+	public void additionTest() {
 		
-		driver.findElement(AppiumBy.accessibilityId("Create contact")).click();
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_5")).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.xpath("//android.widget.EditText[@text=\"First name\"]")));
-		//firstname
-		WebElement firstName = driver.findElement(AppiumBy.xpath("//android.widget.EditText[@text=\"First name\"]"));
-		WebElement lastName = driver.findElement(AppiumBy.xpath("//android.widget.EditText[@text=\"Last name\"]"));
-		WebElement PhoneNum = driver.findElement(AppiumBy.xpath("//android.widget.EditText[@text=\"+91\"]"));
+		driver.findElement(AppiumBy.accessibilityId("Plus")).click();
 		
-		firstName.sendKeys("Test");
-		lastName.sendKeys("Appium");
-		PhoneNum.sendKeys("9999900000");
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_9")).click();
 		
-		driver.findElement(AppiumBy.xpath("//android.widget.TextView[@text=\"Save\"]")).click();
+		driver.findElement(AppiumBy.accessibilityId("=")).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id("com.google.android.contacts:id/large_title")));
-		String name = driver.findElement(AppiumBy.id("com.google.android.contacts:id/large_title")).getText();
-		assertEquals(name, "Test Appium");
+		String res = driver.findElement(AppiumBy.id("com.vivo.calculator:id/formula")).getText();
+		System.out.println("The result of addition is "+ res);
+		assertEquals(res, "14");
+		
+	}
+	
+	@Test(priority = 2)
+	public void subTractionTest() {
+		
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_1")).click();
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_0")).click();
+		
+		driver.findElement(AppiumBy.accessibilityId("Minus")).click();
+		
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_5")).click();
+		
+		driver.findElement(AppiumBy.accessibilityId("=")).click();
+		
+		String res = driver.findElement(AppiumBy.id("com.vivo.calculator:id/formula")).getText();
+		System.out.println("The result of Subtraction is "+ res);
+		assertEquals(res, "5");
+		
+	}
+	
+	@Test(priority = 3)
+	public void MultiplyTest() {
+		
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_5")).click();
+		
+		
+		driver.findElement(AppiumBy.accessibilityId("Multiply")).click();
+		
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_1")).click();
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_0")).click();
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_0")).click();
+		
+		driver.findElement(AppiumBy.accessibilityId("=")).click();
+		
+		String res = driver.findElement(AppiumBy.id("com.vivo.calculator:id/formula")).getText();
+		System.out.println("The result of Multiplication is "+ res);
+		assertEquals(res, "500");
+		
+	}
+	
+	@Test(priority = 4)
+	public void DivideTest() {
+		
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_5")).click();
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_0")).click();
+		
+		driver.findElement(AppiumBy.accessibilityId("Divide")).click();
+		
+		driver.findElement(AppiumBy.id("com.vivo.calculator:id/digit_2")).click();
+		
+		driver.findElement(AppiumBy.accessibilityId("=")).click();
+		
+		String res = driver.findElement(AppiumBy.id("com.vivo.calculator:id/formula")).getText();
+		System.out.println("The result of Division is "+ res);
+		assertEquals(res, "25");
+		
 	}
 	
 	@AfterClass
 	public void closure() {
-		
 		driver.quit();
-		
 	}
+		
 }
+	
