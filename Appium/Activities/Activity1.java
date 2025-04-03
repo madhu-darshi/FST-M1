@@ -42,19 +42,19 @@ public class Activity1 {
 	}
 	
 	@Test
-	public void calculatorTest() {
-		//to clear the calculation
+	public void variousLocators() {
+		//using accesibilty id,
 		driver.findElement(AppiumBy.accessibilityId("clear")).click();
-		//find a digit 8
+		
 		driver.findElement(AppiumBy.id("com.miui.calculator:id/btn_8_s")).click();
-		//find multiply symbol
+		
 		driver.findElement(AppiumBy.accessibilityId("multiply")).click();
-		//find digit 3
+		
 		driver.findElement(AppiumBy.id("com.miui.calculator:id/btn_3_s")).click();
-		//find equals symbol
+		
 		driver.findElement(AppiumBy.accessibilityId("equals")).click();
 		
-		String res = driver.findElement(AppiumBy.id("com.miui.calculator:id/result")).getText();
+		String res = driver.findElement(AppiumBy.xpath("//android.widget.ViewText[@resource-id='result")).getText();
 		assertEquals(res, "= 24");
 		
 	}
